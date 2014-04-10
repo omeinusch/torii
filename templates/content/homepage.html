@@ -1,0 +1,82 @@
+{% extends 'global/base.html' %}
+{% load i18n %}
+{% load torii %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="jumbotron">
+                <h1>{{ phrases.homepage_jumbo_heading }}</h1>
+                <p>{{ phrases.homepage_jumbo_introduction }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            {% if announcement %}
+                <div class="well">
+                    <h3><a href="{{ announcement.get_absolute_url }}">{{ announcement.title }}</a>
+                        <small>{{ announcement.published }}</small>
+                    </h3>
+                    {{ announcement.content|markdown|urlize }}
+                </div>
+                <p class="small">{{ phrases.news_introduction }}</p>
+            {% endif %}
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h2 class="panel-title">{% trans 'Current version' %} <i class="fa fa-asterisk pull-right"></i> </h2>
+                </div>
+                <div class="panel-body">
+                    <h3 class="text-center">{{ latest_release }}
+                        {% if latest_release.stable %}
+                            <span class="label label-primary">{% trans 'Stable' %}</span>
+                        {% else %}
+                            <span class="label label-danger">{% trans 'Unstable' %}</span>
+                        {% endif %}
+                    </h3>
+                    <dl class="dl-horizontal">
+                        <dt>{% trans 'Released:' %}</dt>
+                        <dd>
+                            <span title="{{ latest_release.published }}">{{ latest_release.published|timesince }}</span>
+                            {% trans 'ago' %}
+                        </dd>
+                        <dt>{% trans 'Closed issues:' %}</dt>
+                        <dd>{{ latest_release.milestone.closed_issues }}</dd>
+                    </dl>
+                </div>
+                <div class="panel-footer text-center">
+                    <a href="{% url 'releases-detail' latest_release.tag_name %}" class="btn btn-primary">{% trans 'About this release' %}</a>
+                    <a href="{% url 'support' %}" class="btn btn-info">{% trans 'Need support?' %}</a>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{% trans 'Last commit' %}</h3>
+                </div>
+                <div class="panel-body">
+                    <dl class="dl-horizontal">
+                        <dt>SHA</dt>
+                        <dd title="{{ latest_commit.sha }}">{{ latest_commit.sha|slice:":7" }}</dd>
+                        {% if latest_commit.author_name != latest_commit.committer_name %}
+                            <dt>Authored by</dt>
+                            <dd>{{ latest_commit.author_name }}</dd>
+                            <dt>Authored at</dt>
+                            <dd title="{{ latest_commit.author_date }}">{{ latest_commit.author_date|timesince }} {% trans 'ago' %}</dd>
+                        {% endif %}
+                        <dt>Commit by</dt>
+                        <dd>{{ latest_commit.committer_name }}</dd>
+                        <dt>Commit at</dt>
+                        <dd title="{{ latest_commit.committer_date }}">{{ latest_commit.committer_date|timesince }} {% trans 'ago' %}</dd>
+
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}

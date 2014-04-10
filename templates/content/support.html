@@ -1,0 +1,93 @@
+{% extends 'global/base.html' %}
+{% load i18n %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="jumbotron">
+                <h1>{{ phrases.support_heading }}</h1>
+                <p>{{ phrases.support_introduction }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        {% if phrases.support_documentation_text %}
+            <div class="col-md-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h2 class="panel-title">{{ phrases.support_documentation_heading }}</h2>
+                    </div>
+                    <div class="panel-body">
+                        <div class="text-center">
+                            <i class="fa fa-info fa-5x"></i>
+                        </div>
+                        <p>{{ phrases.support_documentation_text }}</p>
+                    </div>
+                    <div class="panel-footer text-center">
+                        <a href="{{ phrases.url_documentation }}">{{ phrases.url_documentation_title }}</a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if phrases.support_userforum_text %}
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h2 class="panel-title">{{ phrases.support_userforum_heading }}</h2>
+                    </div>
+                    <div class="panel-body">
+                        <div class="text-center">
+                            <i class="fa fa-comments fa-5x"></i>
+                        </div>
+                        <p>{{ phrases.support_userforum_text }}</p>
+                    </div>
+                    <div class="panel-footer text-center">
+                        <a href="{{ phrases.url_userforum }}">{{ phrases.url_userforum_title }}</a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if phrases.support_security_text %}
+        <div class="col-md-6">
+            <div class="panel panel-danger">
+                <div class="panel-heading">
+                    <h2 class="panel-title">{{ phrases.support_security_heading }}</h2>
+                </div>
+                <div class="panel-body">
+                    <div class="text-center">
+                        <i class="fa fa-bug fa-5x"></i>
+                    </div>
+                    <p>{{ phrases.support_security_text }}</p>
+                </div>
+                <div class="panel-footer text-center">
+                    <a href="{{ phrases.url_security }}">{{ phrases.url_security_title }}</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+
+        {% if phrases.support_extra_text %}
+            <div class="col-md-6">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h2 class="panel-title">{{ phrases.support_extra_heading }}</h2>
+                    </div>
+                    <div class="panel-body">
+                        <div class="text-center">
+                            <i class="fa fa-exclamation fa-5x"></i>
+                        </div>
+                        <p>{{ phrases.support_extra_text }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+
+
+    </div>
+
+
+{% endblock %}

@@ -1,0 +1,101 @@
+{% extends 'global/base.html' %}
+{% load i18n %}
+{% load torii %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="jumbotron">
+                <h1>{{ phrases.downloads_heading }}</h1>
+                <p>{{ phrases.downloads_introduction }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-9">
+            <div class="panel panel-danger">
+                <div class="panel-heading">
+                    <h2 class="panel-title">{{ phrases.downloads_danger_heading }} <i class="fa fa-exclamation pull-right"></i> </h2>
+                </div>
+                <div class="panel-body">
+                    {{ phrases.downloads_danger_text }}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h2 class="panel-title">{{ phrases.license_heading }} <i class="fa fa-legal pull-right"></i> </h2>
+                </div>
+                <div class="panel-body">
+                    {{ phrases.license_text }}
+                </div>
+                <div class="panel-footer text-center">
+                    <a href="{{ phrases.url_license }}">{{ phrases.url_license_text }}</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <ul class="nav nav-tabs nav-justified">
+        {% if latest_stable %}
+        <li class="active"><a href="#stable" data-toggle="tab"><i class="fa fa-heart"></i> {% trans 'stable' %} ({{ latest_stable.tag_name }})</a></li>
+        {% endif %}
+        {% if latest_unstable %}
+        <li class="{% if not latest_stable %}active{% endif %}"><a href="#unstable" data-toggle="tab">{% trans 'unstable' %} ({{ latest_unstable.tag_name }}) <i class="fa fa-bolt"></i></a></li>
+        {% endif %}
+        <li><a href="#development" data-toggle="tab">{% trans 'development' %} <i class="fa fa-wrench"></i> </a></li>
+    </ul>
+
+    <div class="tab-content row">
+        {% if latest_stable %}
+            <div class="col-md-12 tab-pane active" id="stable">
+                <h2>{{ latest_stable }}</h2>
+                <h3>{{ latest_stable.tag_name }} <small>released <span title="{{ latest_stable.published }}">{{ latest_stable.published|timesince }}</span> ago</small></h3>
+                <div class="well">{{ latest_stable.notes|markdown|urlize }}</div>
+                <ul class="list-inline">
+                    <li><a href="{{ latest_stable.download_tar }}" class="btn btn-primary">{% trans 'Download .tar.gz' %}</a></li>
+                    <li><a href="{{ latest_stable.download_zip }}" class="btn btn-primary">{% trans 'Download .zip' %}</a></li>
+                    <li><a href="{% url 'releases-detail' latest_stable.tag_name %}" class="btn btn-default">{% trans 'Learn more about this release' %}</a></li>
+                </ul>
+            </div>
+        {% endif %}
+        {% if latest_unstable %}
+            <div class="col-md-12 tab-pane {% if not latest_stable %}active{% endif %}" id="unstable">
+                <h2>{{ latest_unstable }} <span class="label label-danger">unstable</span> </h2>
+                <h3>{{ latest_unstable.tag_name }} <small>released <span title="{{ latest_unstable.published }}">{{ latest_unstable.published|timesince }}</span> ago</small></h3>
+                <div class="well">{{ latest_unstable.notes|markdown|urlize }}</div>
+                <ul class="list-inline">
+                    <li><a href="{{ latest_unstable.download_tar }}" class="btn btn-primary">{% trans 'Download .tar.gz' %}</a></li>
+                    <li><a href="{{ latest_unstable.download_zip }}" class="btn btn-primary">{% trans 'Download .zip' %}</a></li>
+                    <li><a href="{% url 'releases-detail' latest_unstable.tag_name %}" class="btn btn-default">{% trans 'Learn more about this release' %}</a></li>
+                </ul>
+            </div>
+        {% endif %}
+
+        <div class="col-md-12 tab-pane active" id="development">
+            <h2>{% trans 'development' %}</h2>
+            <h3>{{ configuration.github_development_branch }} / <span title="{{ latest_commit.sha }}">{{ latest_commit }}</span> <small title="{{ latest_commit.committer_date }}">
+                {% blocktrans with commit_date_timesince=latest_commit.committer_date|timesince %}
+                    committed {{ commit_date_timesince }} ago
+                {% endblocktrans %}
+            </small></h3>
+
+            <div class="well">
+                <strong>{% trans 'Authored' %}
+                    <span title="{{ latest_commit.author_date }}">{{ latest_commit.author_date|timesince }}</span>
+                    {% trans 'ago by' %} {{ latest_commit.author_name }}</strong>
+
+                {{ latest_commit.message|markdown|urlize }}
+            </div>
+
+            <a href="{{ latest_commit.url }}" class="btn btn-primary">{% trans 'Check the changes at GitHub' %} <i class="fa fa-github"></i></a>
+            <a href="https://github.com/{{ configuration.github_repository }}/archive/{{ configuration.github_development_branch }}.zip" class="btn btn-default">{% trans 'Download zipball' %} <i class="fa fa-download"></i></a>
+        </div>
+
+
+    </div>
+
+
+{% endblock %}

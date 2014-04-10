@@ -1,0 +1,92 @@
+{% extends 'global/base.html' %}
+{% load i18n %}
+{% load torii %}
+{% block content %}
+    <div class="jumbotron">
+        <h1>{{ phrases.releases_heading }}</h1>
+        <p>{{ phrases.releases_introduction }}</p>
+    </div>
+
+    {% for milestone in milestones %}
+            <div class="row">
+                <div class="col-md-5">
+                    <h2 class="text-center">{{ milestone }}
+                        <small>
+                            {% if not milestone.release %}
+                                <span class="label label-danger">{% trans 'in development' %}</span>
+                            {% elif milestone.release.stable %}
+                                <span class="label label-success">{% trans 'stable' %}</span>
+                            {% else %}
+                                <span class="label label-warning">{% trans 'unstable' %}</span>
+                            {% endif %}
+                        </small>
+                    </h2>
+
+                    <div class="text-center">
+                        {% if milestone.state == milestone.STATE_OPEN %}
+                            <i class="fa fa-5x fa-gear fa-spin" title="{{ milestone.get_state_display }}"></i>
+                        {% elif milestone.state == milestone.STATE_CLOSED %}
+                            <i class="fa fa-5x fa-check" title="{{ milestone.get_state_display }}"></i>
+                        {% endif %}
+                        <br>
+                        <span style="font-size: 250%">
+                            {{ milestone.closed_issues }}
+                            /
+                            {{ milestone.total_issues }}
+                        </span>
+                        <div class="progress">
+                            {% if milestone.progress == 100 %}
+                                <div class="progress-bar progress-bar-success" style="width: {{ milestone.progress }}%">
+                                </div>
+                            {% else %}
+                                <div class="progress-bar progress-bar-warning" style="width: {{ milestone.progress }}%">
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <dl class="dl-horizontal">
+                        {% if milestone.closed %}
+                            <dt>{% trans 'Closed' %}</dt>
+                            <dd>{{ milestone.closed }}</dd>
+                        {% endif %}
+                        {% if milestone.updated %}
+                            <dt>{% trans 'Updated' %}</dt>
+                            <dd>{{ milestone.updated }}</dd>
+                        {% endif %}
+                        <dt>{% trans 'Created' %}</dt>
+                        <dd>{{ milestone.created }}</dd>
+                    </dl>
+
+                    <div class="text-center">
+                        <a class="btn btn-default" href="{% url 'releases-detail' milestone.title %}">{% trans 'More about' %} {{ milestone }}</a>
+                    </div>
+                </div>
+
+                <div class="col-md-7">
+                    <ul class="list-unstyled">
+                    {% for issue in milestone.issue_set.all %}
+                        <li>
+                            <p>
+                                <a class="pull-right" href="{{ issue.url }}" title="{{ issue }}">
+                                    <i class="fa fa-github fa-fw"></i>
+                                </a>
+                                <span class="pull-right">{{ issue.get_state_display }}</span>
+
+                                <a href="{% url 'releases-detail' milestone.title %}#issue-{{ issue.number }}">{{ issue }}</a>
+
+                                {% for label in issue.labels.all %}
+                                    <span class="label" style="background-color: #{{ label.color }}">{{ label }}</span>
+                                {% endfor %}
+                            </p>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <hr>
+
+    {% endfor %}
+
+{% endblock %}

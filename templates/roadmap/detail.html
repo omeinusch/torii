@@ -1,0 +1,165 @@
+{% extends 'global/base.html' %}
+{% load i18n %}
+{% load torii %}
+{% block content %}
+    <div class="jumbotron">
+        <h1>{{ milestone }}
+            {% if not milestone.release %}
+                <span class="label label-danger">{% trans 'in development' %}</span>
+            {% elif milestone.release.stable %}
+                <span class="label label-success">{% trans 'stable' %}</span>
+            {% else %}
+                <span class="label label-warning">{% trans 'unstable' %}</span>
+            {% endif %}
+        </h1>
+
+        <hr />
+
+        <ul class="list-inline">
+            <li title="{{ milestone.created }}"><strong>{% trans 'Created:' %}</strong> {{ milestone.created|timesince }} {% trans 'ago' %}</li>
+            <li title="{{ milestone.updated }}"><strong>{% trans 'Updated:' %}</strong> {{ milestone.updated|timesince }} {% trans 'ago' %}</li>
+            <li title="{{ milestone.closed|default:'never' }}"><strong>{% trans 'Closed:' %}</strong> {{ milestone.closed|timesince|default:'not yet' }} {% if milestone.closed %}{% trans 'ago' %}{% endif %}</li>
+            <li title="{{ milestone.release.published|default:'never' }}"><strong>{% trans 'Released:' %}</strong> {{ milestone.release.published|timesince|default:'not yet' }} {% if milestone.release.published %}{% trans 'ago' %}{% endif %}</li>
+        </ul>
+
+        {{ milestone.description }}
+
+        {% if milestone.release %}
+            <ul class="list-inline">
+                <li>
+                    <a href="{{ milestone.release.download_tar }}" class="btn btn-default btn-lg">
+                        {% trans 'Download .tar.gz' %}
+                        <i class="fa fa-download"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ milestone.release.download_zip }}" class="btn btn-default btn-lg">
+                        {% trans 'Download .zip' %}
+                        <i class="fa fa-download"></i>
+                    </a>
+                </li>
+            </ul>
+        {% endif %}
+
+
+    </div>
+
+
+    {% if milestone.release %}
+        <div class="row">
+            <div class="col-md-12">
+                <h2>{% trans 'Release notes' %}</h2>
+                <div class="well">
+                    {{ milestone.release.notes|markdown|urlize }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+
+    <h2>{% trans 'Current status' %}</h2>
+    <div class="row text-center">
+        <div class="col-md-6">
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{% trans 'Open issues' %}</h3>
+                </div>
+                <div class="panel-body">
+                    <span style="font-size: 250%">{{ milestone.open_issues }}</span>
+                </div>
+                {% with first_created=milestone.issue_first_created %}
+                    {% if first_created %}
+                        <div class="panel-footer">
+                            <a data-toggle="collapse" data-parent="#issues" href="#issue-{{ first_created.number }}">
+                            {% trans 'Oldest opened issue: ' %} {{ first_created }}
+                            </a>
+                            <small title="{{ first_created.created }}">{{ first_created.created|timesince }} {% trans 'ago' %}</small>
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+            </div>
+
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{% trans 'Closed issues' %}</h3>
+                </div>
+                <div class="panel-body">
+                    <span style="font-size: 250%">{{ milestone.closed_issues }}</span>
+                </div>
+                <div class="panel-footer">
+                    {% with last_closed=milestone.issue_last_closed %}
+                        {% if last_closed %}
+                            <a data-toggle="collapse" data-parent="#issues" href="#issue-{{ last_closed.number }}">
+                            {% trans 'Last closed issue: ' %} {{ last_closed }}
+                            </a>
+                            <small title="{{ last_closed.created }}">{{ last_closed.created|timesince }} {% trans 'ago' %}</small>
+                        {% endif %}
+                    {% endwith %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            {% if milestone.progress == 100 %}
+                <div class="progress">
+                    <div class="progress-bar progress-bar-success" style="width: {{ milestone.progress }}%"></div>
+                </div>
+            {% else %}
+                <div class="progress progress-striped active">
+                    <div class="progress-bar progress-bar-warning" style="width: {{ milestone.progress }}%" title="{% trans 'Closed issues' %}"></div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <h2>{% trans 'Issues, features and bugs' %}</h2>
+    <div class="panel-group" id="issues">
+    {% for issue in milestone.issue_set.all %}
+        {% if issue.state == milestone.STATE_OPEN %}
+            <div class="panel panel-warning">
+        {% elif issue.state == milestone.STATE_CLOSED %}
+            <div class="panel panel-success">
+        {% else %}
+            <div class="panel panel-default">
+        {% endif %}
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#issues" href="#issue-{{ issue.number }}">
+                        {{ issue }}
+                    </a>
+                    {% for label in issue.labels.all %}
+                        <span class="label" style="background-color: #{{ label.color }}">{{ label }}</span>
+                    {% endfor %}
+                    <a class="pull-right" href="{{ issue.url }}" title="{{ issue }}">
+                        <i class="fa fa-github fa-fw"></i>
+                    </a>
+                    <span class="pull-right">{{ issue.get_state_display }}</span>
+                </h3>
+            </div>
+            <div class="panel-collapse collapse" id="issue-{{ issue.number }}">
+                <div class="panel-body">
+                    {{ issue.body|markdown|urlize }}
+                    <ul class="list-inline">
+                        <li title="{{ issue.created }}"><strong>{% trans 'Created:' %}</strong> {{ issue.created|timesince }} {% trans 'ago' %}</li>
+                        <li title="{{ issue.updated }}"><strong>{% trans 'Updated:' %}</strong> {{ issue.updated|timesince }} {% trans 'ago' %}</li>
+                        <li title="{{ issue.closed|default:'never' }}"><strong>{% trans 'Closed:' %}</strong> {{ issue.closed|timesince|default:'not yet' }} {% if issue.closed %}{% trans 'ago' %}{% endif %}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    {% endfor %}
+    </div>
+
+    <script>
+        window.onload = function() {
+            var elem;
+            if (elem = document.getElementById(window.location.hash.substr(1))) {
+                elem.classList.add('in');
+            }
+        }
+    </script>
+
+{% endblock %}

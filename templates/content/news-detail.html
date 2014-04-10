@@ -1,0 +1,26 @@
+{% extends 'global/base.html' %}
+{% load i18n %}
+{% load torii %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="jumbotron">
+                <h1>{{ phrases.news_heading }}</h1>
+                <p>{{ phrases.news_introduction }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h3>
+                <a href="{{ news.get_absolute_url }}">{{ news.title }}</a>
+                <small title="{{ news.published }}">{{ news.published|timesince }} {% trans 'ago' %}</small>
+            </h3>
+            {{ news.content|markdown|urlize }}
+        </div>
+    </div>
+
+
+
+{% endblock %}
