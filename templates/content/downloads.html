@@ -74,7 +74,7 @@
             </div>
         {% endif %}
 
-        <div class="col-md-12 tab-pane active" id="development">
+        <div class="col-md-12 tab-pane" id="development">
             <h2>{% trans 'development' %}</h2>
             <h3>{{ configuration.github_development_branch }} / <span title="{{ latest_commit.sha }}">{{ latest_commit }}</span> <small title="{{ latest_commit.committer_date }}">
                 {% blocktrans with commit_date_timesince=latest_commit.committer_date|timesince %}
@@ -96,6 +96,5 @@
 
 
     </div>
-
 
 {% endblock %}
