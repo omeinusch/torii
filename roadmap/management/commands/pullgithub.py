@@ -22,7 +22,7 @@ class Command(BaseCommand):
     path_milestones = '{server}/repos/{repository}/milestones'.format(**format_dict)
     path_issues = '{server}/repos/{repository}/issues'.format(**format_dict)
     path_development_branch = '{server}/repos/{repository}/git/refs/heads/{development_branch}'.format(
-        development_branch=conf.development_branch, **format_dict)
+        development_branch=conf.github_development_branch, **format_dict)
 
     headers_dict = {'Authorization': 'token {0}'.format(github_token)}
 
