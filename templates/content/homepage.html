@@ -73,8 +73,11 @@
                                 <dd>{{ latest_commit.committer_name }}</dd>
                                 <dt>Commit at</dt>
                                 <dd title="{{ latest_commit.committer_date }}">{{ latest_commit.committer_date|timesince }} {% trans 'ago' %}</dd>
-
                             </dl>
+                        </div>
+                        <div class="panel-footer text-center">
+                            <a href="{{ latest_commit.url }}">{% trans 'Check the changes at GitHub' %} <i class="fa fa-github"></i></a>
+
                         </div>
                     </div>
                 </div>
