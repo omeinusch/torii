@@ -33,6 +33,8 @@ class Milestone(models.Model):
 
     @property
     def progress(self):
+        if self.total_issues == 0:
+            return 0
         return int(self.closed_issues / self.total_issues * 100)
 
     @property
