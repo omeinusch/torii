@@ -70,8 +70,9 @@
                 {% with first_created=milestone.issue_first_created %}
                     {% if first_created %}
                         <div class="panel-footer">
+                            {% trans 'Oldest opened issue:' %}
                             <a data-toggle="collapse" data-parent="#issues" href="#issue-{{ first_created.number }}">
-                            {% trans 'Oldest opened issue: ' %} {{ first_created }}
+                                {{ first_created }}
                             </a>
                             <small title="{{ first_created.created }}">{{ first_created.created|timesince }} {% trans 'ago' %}</small>
                         </div>
@@ -92,8 +93,9 @@
                 <div class="panel-footer">
                     {% with last_closed=milestone.issue_last_closed %}
                         {% if last_closed %}
+                            {% trans 'Last closed issue:' %}
                             <a data-toggle="collapse" data-parent="#issues" href="#issue-{{ last_closed.number }}">
-                            {% trans 'Last closed issue: ' %} {{ last_closed }}
+                                {{ last_closed }}
                             </a>
                             <small title="{{ last_closed.created }}">{{ last_closed.created|timesince }} {% trans 'ago' %}</small>
                         {% endif %}

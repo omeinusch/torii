@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from models import News
 
-from roadmap.models import Release, Milestone, Commit
+from roadmap.models import Release, Milestone, Commit, Issue
 
 
 def homepage(request):
@@ -39,7 +39,13 @@ def news(request):
 
 def releases(request):
     milestones = Milestone.objects.all()
-    return render(request, 'roadmap/index.html', {'milestones': milestones})
+    planned_issues = len(Issue.objects.filter(state=Issue.STATE_OPEN, milestone__isnull=True))
+    return render(request, 'roadmap/index.html', {'milestones': milestones, 'planned_issues': planned_issues})
+
+
+def planned(request):
+    planned_issues = Issue.objects.filter(state=Issue.STATE_OPEN, milestone__isnull=True)
+    return render(request, 'roadmap/planned.html', {'planned_issues': planned_issues})
 
 
 def releases_detail(request, milestone_title):
