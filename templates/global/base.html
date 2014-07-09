@@ -62,6 +62,11 @@
 
             <div class="text-center small col-md-12">
                 <hr />
+                <ul class="list-inline">
+                    {% if configuration.github_repository %}<li><a href="https://github.com/{{ configuration.github_repository }}"><i class="fa fa-github"></i> GitHub</a></li>{% endif %}
+                    {% if configuration.ohloh_project_url_name %}<li><a href="http://ohloh.net/p/{{ configuration.ohloh_project_url_name }}">Ohloh</a></li>{% endif %}
+                    {% if configuration.sourceforge_project_unixname %}<li><a href="https://sourceforge.net/p/{{ configuration.sourceforge_project_unixname }}">SourceForge</a></li>{% endif %}
+                </ul>
                 {{ phrases.footer_line|markdown }}
             </div>
         </div>

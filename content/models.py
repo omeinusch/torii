@@ -29,6 +29,8 @@ class Configuration(models.Model):
     github_token = models.CharField(max_length=40)
     github_repository = models.CharField(max_length=100)
     github_development_branch = models.CharField(max_length=100)
+    ohloh_project_url_name = models.CharField(max_length=100, blank=True)
+    sourceforge_project_unixname = models.CharField(max_length=100, blank=True)
 
     def __unicode__(self):
         return self.name

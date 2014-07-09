@@ -25,10 +25,10 @@
         </div>
         <div class="col-md-5 col-lg-4">
             <div class="row">
-                <div class="col-md-12 col-sm-6">
+                <div class="col-md-12 col-xs-6">
                     <div class="panel panel-primary">
                         <div class="panel-heading">
-                            <h2 class="panel-title">{% trans 'Current version' %} <i class="fa fa-asterisk pull-right"></i> </h2>
+                            <h3 class="panel-title">{% trans 'Current version' %} <i class="fa fa-asterisk pull-right"></i> </h3>
                         </div>
                         <div class="panel-body">
                             <h3 class="text-center">{{ latest_release }}
@@ -54,10 +54,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12 col-sm-6">
+                <div class="col-md-12 col-xs-6">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h3 class="panel-title">{% trans 'Last commit' %}</h3>
+                            <h3 class="panel-title">{% trans 'Last commit' %} <i class="fa fa-code pull-right"></i></h3>
                         </div>
                         <div class="panel-body">
                             <p class="small">
@@ -80,10 +80,24 @@
                         </div>
                         <div class="panel-footer text-center">
                             <a href="{{ latest_commit.url }}">{% trans 'Check the changes at GitHub' %} <i class="fa fa-github"></i></a>
-
                         </div>
                     </div>
                 </div>
+                {% if configuration.ohloh_project_url_name %}
+                <div class="col-xs-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">{% trans 'Ohloh Factoids' %}  <i class="fa fa-info pull-right"></i></h3>
+                        </div>
+                        <div class="panel-body">
+                            <script type="text/javascript" src="http://www.ohloh.net/p/{{ configuration.ohloh_project_url_name }}/widgets/project_factoids.js"></script>
+                        </div>
+                        <div class="panel-footer text-center">
+                            <a href="">{% trans 'Visit on ohloh.net' %}</a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
