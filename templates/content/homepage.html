@@ -60,6 +60,9 @@
                             <h3 class="panel-title">{% trans 'Last commit' %}</h3>
                         </div>
                         <div class="panel-body">
+                            <p class="small">
+                                {{ latest_commit.message }}
+                            </p>
                             <dl class="dl-horizontal">
                                 <dt>SHA</dt>
                                 <dd title="{{ latest_commit.sha }}">{{ latest_commit.sha|slice:":7" }}</dd>
